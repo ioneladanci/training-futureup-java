@@ -7,14 +7,17 @@ import ro.zynk.futureup.controllers.requests.CoinTransactionRequest;
 import ro.zynk.futureup.controllers.responses.*;
 import ro.zynk.futureup.domain.dtos.Coin;
 import ro.zynk.futureup.domain.dtos.CoinAmount;
+import ro.zynk.futureup.domain.dtos.Transaction;
 import ro.zynk.futureup.domain.dtos.Wallet;
 import ro.zynk.futureup.domain.repositories.CoinAmountRepository;
 import ro.zynk.futureup.domain.repositories.CoinRepository;
+import ro.zynk.futureup.domain.repositories.TransactionRepository;
 import ro.zynk.futureup.domain.repositories.WalletRepository;
 import ro.zynk.futureup.exceptions.NotEnoughFundsException;
 import ro.zynk.futureup.exceptions.NotFoundException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,12 +26,14 @@ public class WalletService {
     private final WalletRepository walletRepository;
     private final CoinRepository coinRepository;
     private final CoinAmountRepository coinAmountRepository;
+    private final TransactionRepository transactionRepository;
 
     @Autowired
-    public WalletService(WalletRepository walletRepository, CoinRepository coinRepository, CoinAmountRepository coinAmountRepository) {
+    public WalletService(WalletRepository walletRepository, CoinRepository coinRepository, CoinAmountRepository coinAmountRepository,TransactionRepository transactionRepository) {
         this.walletRepository = walletRepository;
         this.coinRepository = coinRepository;
         this.coinAmountRepository = coinAmountRepository;
+        this.transactionRepository=transactionRepository;
     }
 
     public WalletResponse saveNewWallet(WalletResponse walletResponse) {
@@ -76,6 +81,9 @@ public class WalletService {
         coinAmount.setAmount(coinAmount.getAmount() + buyCoinRequest.getAmount());
 
         coinAmountRepository.save(coinAmount);
+        Transaction transaction = new Transaction(new Date(),coin, (double) buyCoinRequest.getAmount(),buyCoinRequest.getAmount()*coin.getValue());
+
+        transaction = transactionRepository.save(transaction);
         return new CoinTransactionResponse(new CoinResponse(coin), new WalletResponse(wallet), coinAmount.getAmount());
     }
 
@@ -135,5 +143,18 @@ public class WalletService {
             coinTransactionResponses.add(new CoinTransactionResponse(coinAmount));
         }
         return new ListCoinTransactionResponse(coinTransactionResponses);
+    }
+
+    public float getTheTotalValueOffCoinsFromWallet(Long walletId) throws NotFoundException{
+        Optional<Wallet> walletOpt = walletRepository.findById(walletId);
+        if (walletOpt.isEmpty()) {
+            throw new NotFoundException("Wallet not found!");
+        }
+        List<CoinAmount> coinAmounts = coinAmountRepository.findAllByWallet(walletOpt.get());
+        float totalValue=0;
+        for(CoinAmount coinAmount:coinAmounts){
+            totalValue+=coinAmount.getCoin().getValue()*coinAmount.getAmount();
+        }
+        return totalValue;
     }
 }

@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "ccf8e78b-9a4f-4592-9920-6854e6c9cdde",
+		"_postman_id": "842f9b67-96d1-4117-a0a4-6b1b09a5cb8e",
 		"name": "FutureUp",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26670773"
 	},
 	"item": [
 		{
@@ -10,7 +11,18 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": null
+				"url": {
+					"raw": "https://localhost:8080/coins/all_coins",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"coins",
+						"all_coins"
+					]
+				}
 			},
 			"response": []
 		},
@@ -176,6 +188,65 @@
 						"wallets",
 						"get_all_owned_coins",
 						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get The Total Value Off Coins From Wallet",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/wallets/get_the_value_of_all_owned_coins/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"wallets",
+						"get_the_value_of_all_owned_coins",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Transactions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/transactions/all_transactions",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"transactions",
+						"all_transactions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Transactions With Total Amount Greater Than",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/transactions/all_transactions_greater_than/100",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"transactions",
+						"all_transactions_greater_than",
+						"100"
 					]
 				}
 			},

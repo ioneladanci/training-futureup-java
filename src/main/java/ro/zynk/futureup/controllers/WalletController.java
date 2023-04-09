@@ -7,10 +7,13 @@ import org.springframework.web.bind.annotation.*;
 import ro.zynk.futureup.controllers.requests.CoinExchangeRequest;
 import ro.zynk.futureup.controllers.requests.CoinTransactionRequest;
 import ro.zynk.futureup.controllers.responses.BaseResponse;
+import ro.zynk.futureup.controllers.responses.CoinResponse;
 import ro.zynk.futureup.controllers.responses.ErrorResponse;
 import ro.zynk.futureup.controllers.responses.WalletResponse;
 import ro.zynk.futureup.exceptions.NotFoundException;
 import ro.zynk.futureup.services.WalletService;
+
+import java.util.List;
 
 
 @RestController
@@ -73,5 +76,10 @@ public class WalletController {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @GetMapping(value = "get_the_value_of_all_owned_coins/{walletId}")
+    public float getTheTotalValueOffCoinsFromWallet(@PathVariable("walletId") Long walletId) {
+        return walletService.getTheTotalValueOffCoinsFromWallet(walletId);
     }
 }
